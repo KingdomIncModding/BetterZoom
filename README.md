@@ -2,12 +2,17 @@
 
 Zoom further out and further in in Kingdom Inc., using the normal mouse wheel controls. Works in both the workshop and research tree.
 
-Version: 1.0.0. Author: urakkaamyx.
+Version: 1.0.1. Author: urakkaamyx.
+
+![Better Zoom](Assets/Thumbnails/better-zoom-thumbnail-v1.png)
+
+[GitHub releases](https://github.com/urakkaamyx/KingdomInc_BetterZoom/releases) · [Nexus Mods](https://www.nexusmods.com/kingdominc/mods/14)
 
 - Three additional zoom-out steps show up to eight times the vanilla maximum width and height.
 - Three additional zoom-in steps provide up to eight times the vanilla maximum magnification.
 - Zoom stays anchored under the mouse. Keyboard panning, background selection, font scaling, UI scroll blocking and Shift+wheel workshop switching retain their native behavior.
 - Each direction can be configured independently from zero to five additional steps.
+- The research-tree backdrop fills the camera at extended zoom levels and after panning. Its grid becomes coarser at far zoom to keep the native tile count bounded.
 
 ## Requirements and installation
 
@@ -15,7 +20,7 @@ Built and tested against Kingdom Inc. Release v1.0.12, Unity 6000.3.27f2, and Be
 
 1. Install BepInEx 5 for Windows x64 if needed.
 2. Close Kingdom Inc.
-3. Extract `KingdomInc-BetterZoom-1.0.0.zip` into the game folder containing `KingdomInc.exe`.
+3. Extract `KingdomInc-BetterZoom-1.0.1.zip` into the game folder containing `KingdomInc.exe`.
 4. Confirm `BepInEx/plugins/BetterZoom/BetterZoom.dll` exists, then launch the game.
 5. Scroll in the workshop or research tree to move past the old limits.
 
@@ -55,11 +60,13 @@ dotnet build .\BetterZoom.csproj -c Release
 
 For a first installation while the game is running, `install.ps1 -StageForNextLaunch` stages the DLL for the next restart. An existing installed DLL is never replaced while the game runs.
 
-The isolated verification runtime loads a disposable kingdom, blocks save loading/writing and Steam achievements, exercises both cameras, wheel input, scale and cursor anchoring, zero-extension settings, keyboard panning, safe native save values and removal. It never loads a user kingdom. The companion run repeats these checks with the currently installed plugins. Reports in `Verification/` identify the exact tested DLL by SHA-256. The packager requires matching passing reports and verifies a clean extraction.
+The isolated verification runtime loads a disposable kingdom, blocks save loading/writing and Steam achievements, exercises both cameras, wheel input, scale and cursor anchoring, zero-extension settings, keyboard panning, safe native save values and removal. Background checks cover every zoom step and the maximum configured zoom-out at 4:3, 16:9 and 32:9, after positive and negative panning. It never loads a user kingdom. The companion run repeats these checks with the currently installed plugins. Reports in `Verification/` identify the exact tested DLL by SHA-256. The packager requires matching passing reports and verifies a clean extraction.
 
 Source repository naming convention: `urakkaamyx/KingdomInc_BetterZoom`.
 
 ## Changelog
+
+1.0.1: Fix the research-tree backdrop ending in a small rectangle when zooming far out. Keep background coverage across the full view while panning and at ultrawide aspect ratios; restore native grid scale when zooming back in. No save changes.
 
 1.0.0: Initial release with extended workshop/research zoom, cursor anchoring and configurable limits.
 
@@ -69,4 +76,4 @@ Created by urakkaamyx. Uses BepInEx and Harmony; no base-game assemblies or artw
 
 For problems, include your game version, Better Zoom version, configuration and `BepInEx/LogOutput.log`.
 
-Source repository: https://github.com/urakkaamyx/KingdomInc_BetterZoom
+Source repository: [urakkaamyx/KingdomInc_BetterZoom](https://github.com/urakkaamyx/KingdomInc_BetterZoom).

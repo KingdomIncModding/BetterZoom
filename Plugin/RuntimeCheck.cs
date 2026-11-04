@@ -7,6 +7,7 @@ using Assets.Behaviour.Flow;
 using PlayerInput = Assets.Behaviour.Input.PlayerInput;
 using Assets.Behaviour.UI;
 using Assets.Behaviour.UI.Shared;
+using Assets.Behaviour.UI.TechTree;
 using Assets.Source.Flow.Elements;
 using Assets.Source.Player;
 using Assets.Source.Util;
@@ -70,9 +71,26 @@ namespace KingdomBetterZoom
                 Check(WorldFlowCamera.Instance != workshop, "Research tree uses separate camera");
                 VerifyCamera(WorldFlowCamera.Instance, "research tree");
                 VerifyWheel(WorldFlowCamera.Instance, mouse);
+                VerifyBackgroundExtremes(WorldFlowCamera.Instance);
                 Check(GamePlayer.Current.FlowZoom >= 0 && GamePlayer.Current.FlowZoom <= 4 && GamePlayer.Current.TechTreeZoom >= 0 && GamePlayer.Current.TechTreeZoom <= 4, "Both stored camera levels remain vanilla compatible");
                 var json = GamePlayer.Current.ToJson();
                 Check(json["FlowZoom"].AsInteger >= 0 && json["TechTreeZoom"].AsInteger >= 0, "Native save JSON contains safe nonnegative zoom levels");
+                var view = WorldFlowCamera.Instance;
+                Apply(view, -3);
+                var nodes = TechTreeMenu.Instance.Nodes.ToArray();
+                if (nodes.Length > 0)
+                {
+                    float x = (nodes.Min(n => n.transform.position.x) + nodes.Max(n => n.transform.position.x)) / 2f;
+                    float y = (nodes.Min(n => n.transform.position.y) + nodes.Max(n => n.transform.position.y)) / 2f;
+                    CameraField(view).transform.position = new Vector3(x, y, CameraField(view).transform.position.z);
+                }
+                CoverBackground(view);
+            }
+            catch (Exception ex) { error = ex.ToString(); }
+            yield return new WaitForEndOfFrame();
+            if (error == null) try
+            {
+                CaptureCamera(CameraField(WorldFlowCamera.Instance), Path.Combine(directory, "research-tree-far-1.0.1.png"));
                 GameUI.Instance.ToggleTechMenu(false);
             }
             catch (Exception ex) { error = ex.ToString(); }
@@ -94,10 +112,14 @@ namespace KingdomBetterZoom
                 Check(camera.transform.position.x > 0, "Keyboard pans right at close zoom without stopping or reversing");
                 InputSystem.QueueStateEvent(keyboard, new KeyboardState()); InputSystem.Update();
                 workshop.SetZoomLevel(workshop.ZoomLevel);
-                foreach (var method in new[] { AccessTools.Method(typeof(WorldFlowCamera), "ChangeZoomLevel"), AccessTools.Method(typeof(WorldFlowCamera), "SetZoomLevel"), AccessTools.PropertyGetter(typeof(WorldFlowCamera), "ZoomScale") })
+                var background = BackgroundField(workshop);
+                var state = States.GetOrCreateValue(workshop);
+                if (background && state.HasBackground) background.transform.localScale = state.BackgroundScale;
+                foreach (var method in new[] { AccessTools.Method(typeof(WorldFlowCamera), "ChangeZoomLevel"), AccessTools.Method(typeof(WorldFlowCamera), "SetZoomLevel"), AccessTools.PropertyGetter(typeof(WorldFlowCamera), "ZoomScale"), AccessTools.Method(typeof(WorldFlowCamera), "Update") })
                     harmony.Unpatch(method, HarmonyPatchType.All, Id);
                 workshop.SetZoomLevel(GamePlayer.Current.FlowZoom);
                 Near(camera.orthographicSize, Screen.height / WorldFlowCamera.GetZoomScale(workshop.ZoomLevel), "Removing Better Zoom restores vanilla camera without invalid background indexing");
+                if (background && state.HasBackground) Check(background.transform.localScale == state.BackgroundScale, "Removal restores native background scale");
             }
             catch (Exception ex) { error = ex.ToString(); }
             if (keyboard != null) InputSystem.RemoveDevice(keyboard);
@@ -132,6 +154,7 @@ namespace KingdomBetterZoom
                 Near(view.ZoomScale, Scale(level), label + " public scale at " + level);
                 Near(view.TextScale, Scale(level) / 2f, label + " text scale at " + level);
                 Check(view.ZoomLevel >= 0 && view.ZoomLevel <= view.MaxZoom, label + " native level safe at " + level);
+                VerifyBackground(view, label + " level " + level);
                 Vector2 cursor = Mouse.current.position.ReadValue();
                 var before = camera.ScreenToWorldPoint(cursor);
                 view.ChangeZoomLevel(1);
@@ -150,6 +173,73 @@ namespace KingdomBetterZoom
             Check(Level(view) == view.MaxZoom, label + " zero extra in restores vanilla limit");
             extraOut.Value = oldOut; extraIn.Value = oldIn;
             view.SetZoomLevel(3);
+        }
+
+        void VerifyBackground(WorldFlowCamera view, string label)
+        {
+            var background = BackgroundField(view);
+            if (!background || !background.enabled) return; // Workshop intentionally hides its grid at native level zero.
+            var camera = CameraField(view);
+            var bounds = background.bounds;
+            float left = camera.transform.position.x - camera.orthographicSize * camera.aspect;
+            float right = camera.transform.position.x + camera.orthographicSize * camera.aspect;
+            float bottom = camera.transform.position.y - camera.orthographicSize;
+            float top = camera.transform.position.y + camera.orthographicSize;
+            Check(bounds.min.x <= left && bounds.max.x >= right && bounds.min.y <= bottom && bounds.max.y >= top, label + " backdrop covers all four viewport edges");
+        }
+
+        static void CaptureCamera(Camera camera, string path)
+        {
+            var previous = RenderTexture.active;
+            var oldTarget = camera.targetTexture;
+            var target = RenderTexture.GetTemporary(Screen.width, Screen.height, 24);
+            var texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+            try
+            {
+                camera.targetTexture = target;
+                camera.Render();
+                RenderTexture.active = target;
+                texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+                texture.Apply();
+                File.WriteAllBytes(path, ImageConversion.EncodeToPNG(texture));
+            }
+            finally
+            {
+                camera.targetTexture = oldTarget;
+                RenderTexture.active = previous;
+                RenderTexture.ReleaseTemporary(target);
+                Destroy(texture);
+            }
+        }
+
+        void VerifyBackgroundExtremes(WorldFlowCamera view)
+        {
+            var camera = CameraField(view);
+            var background = BackgroundField(view);
+            Check(background && background.enabled && background.drawMode == SpriteDrawMode.Tiled, "Research backdrop is native tiled sprite");
+            Vector2 tileArea = background.size;
+            Vector3 original = camera.transform.position;
+            float originalAspect = camera.aspect;
+            int originalOut = extraOut.Value;
+            extraOut.Value = 5;
+            foreach (float aspect in new[] { 4f / 3f, 16f / 9f, 32f / 9f })
+            foreach (var position in new[] { new Vector2(-12345, -54321), new Vector2(12345, 54321) })
+            {
+                camera.aspect = aspect;
+                camera.transform.position = new Vector3(position.x, position.y, original.z);
+                Apply(view, -5);
+                VerifyBackground(view, "Maximum configured zoom out, aspect " + aspect + " pan " + position);
+                Check(background.size == tileArea, "Extreme zoom retains bounded native tile count");
+                // Exercise the actual per-frame hook after a pan at far zoom.
+                camera.transform.position += new Vector3(111, -222, 0);
+                AccessTools.Method(typeof(WorldFlowCamera), "Update").Invoke(view, null);
+                VerifyBackground(view, "Per-frame background follows pan at " + aspect);
+            }
+            camera.aspect = originalAspect;
+            camera.transform.position = original;
+            extraOut.Value = originalOut;
+            view.SetZoomLevel(3);
+            Check(background.transform.localScale == States.GetOrCreateValue(view).BackgroundScale, "Returning to normal zoom restores native grid scale");
         }
 
         void VerifyWheel(WorldFlowCamera view, Mouse mouse)
