@@ -1,10 +1,11 @@
-[b]Better Zoom - 1.0.0[/b]
+[b]Better Zoom - 1.0.1[/b]
 Zoom further out and further in with the normal mouse wheel, in both the workshop and research tree.
 
 [b]Features[/b]
 [list]
 [*]Three extra steps in each direction by default: eight times the visible width and height at the far limit, and eight times the usual maximum magnification at the close limit.
 [*]Zoom stays centered under the mouse cursor.
+[*]Research-tree background fills the viewport at far zoom, with bounded tile count and normal grid scale restored when zooming in.
 [*]Configurable extra zoom-in and zoom-out levels, independently adjustable from 0 to 5.
 [*]Preserves normal keyboard panning, UI scroll blocking and Shift+wheel workshop switching.
 [*]No new save fields or buildings; removable without save migration.
@@ -33,10 +34,10 @@ Close the game before replacing the DLL. To remove, delete BepInEx/plugins/Bette
 Extended views are temporary camera state; reopening a view or restarting can restore the nearest normal zoom level. Saves remain usable after removal.
 
 [b]Compatibility and known issues[/b]
-Manual installation and isolated runtime checks are verified. Mod-manager deployment and other game builds are untested. Other camera zoom replacements may conflict. Far zoom makes text small and can increase rendering load. Keyboard movement uses the speed for the nearest normal zoom level.
+169 isolated and 169 companion runtime checks passed on the release DLL; manual archive extraction is verified. Mod-manager deployment and other game builds are untested. Other camera zoom replacements may conflict. Far zoom makes text small and can increase rendering load. Keyboard movement uses the speed for the nearest normal zoom level.
 
-[b]Changes in 1.0.0[/b]
-Initial release: extended workshop and research-tree zoom with configurable limits and cursor anchoring.
+[b]Changes in 1.0.1[/b]
+Fix the research-tree backdrop ending in a small rectangle at far zoom. Preserve coverage while panning and on ultrawide displays; no save changes.
 
 [b]Credits and permissions[/b]
 Created by urakkaamyx. Uses BepInEx and Harmony. No game assemblies or artwork are distributed. No source-code license has been selected.
