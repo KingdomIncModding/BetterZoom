@@ -1,0 +1,10 @@
+Title: Better Zoom
+Version: 1.0.0
+Summary: Zoom further out and in in the workshop and research tree, with configurable limits and normal mouse wheel controls.
+Description: DESCRIPTION.bbcode
+Category: Select the appropriate gameplay or interface category on the actual game listing.
+Suggested tags: User Interface; Quality of Life. Confirm available tags before applying.
+Requirements: BepInEx 5 x64 (Mono), tested 5.4.23.6; Kingdom Inc. Release v1.0.12.
+Changelog: Initial release with three additional zoom steps in each direction, configurable limits and cursor anchoring.
+Publication: Local preparation only. No Nexus page, upload or GitHub repository created.
+Media: No thumbnail or gameplay screenshots prepared; required before a public listing is considered complete.

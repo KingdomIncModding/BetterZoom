@@ -1,0 +1,45 @@
+[b]Better Zoom - 1.0.0[/b]
+Zoom further out and further in with the normal mouse wheel, in both the workshop and research tree.
+
+[b]Features[/b]
+[list]
+[*]Three extra steps in each direction by default: eight times the visible width and height at the far limit, and eight times the usual maximum magnification at the close limit.
+[*]Zoom stays centered under the mouse cursor.
+[*]Configurable extra zoom-in and zoom-out levels, independently adjustable from 0 to 5.
+[*]Preserves normal keyboard panning, UI scroll blocking and Shift+wheel workshop switching.
+[*]No new save fields or buildings; removable without save migration.
+[/list]
+
+[b]Requirements[/b]
+Kingdom Inc. Tested on Release v1.0.12 / Unity 6000.3.27f2.
+BepInEx 5 for Windows x64 / Mono, tested with 5.4.23.6. Harmony is included with BepInEx.
+No other mods required. BepInEx is not bundled.
+
+[b]Installation[/b]
+1. Install BepInEx 5 x64 if needed.
+2. Close Kingdom Inc.
+3. Extract the ZIP into the directory containing KingdomInc.exe.
+4. Confirm BepInEx/plugins/BetterZoom/BetterZoom.dll exists.
+5. Restart and scroll past the old zoom limits in the workshop or research tree.
+
+[b]Configuration[/b]
+After first launch, close the game and edit BepInEx/config/urakka.kingdominc.betterzoom.cfg.
+ExtraZoomOutLevels = 3
+ExtraZoomInLevels = 3
+Each additional step doubles or halves magnification. Allowed values: 0 through 5. Zero restores the normal limit in that direction. Restart after changes.
+
+[b]Updating and removal[/b]
+Close the game before replacing the DLL. To remove, delete BepInEx/plugins/BetterZoom and optionally its configuration file.
+Extended views are temporary camera state; reopening a view or restarting can restore the nearest normal zoom level. Saves remain usable after removal.
+
+[b]Compatibility and known issues[/b]
+Manual installation and isolated runtime checks are verified. Mod-manager deployment and other game builds are untested. Other camera zoom replacements may conflict. Far zoom makes text small and can increase rendering load. Keyboard movement uses the speed for the nearest normal zoom level.
+
+[b]Changes in 1.0.0[/b]
+Initial release: extended workshop and research-tree zoom with configurable limits and cursor anchoring.
+
+[b]Credits and permissions[/b]
+Created by urakkaamyx. Uses BepInEx and Harmony. No game assemblies or artwork are distributed. No source-code license has been selected.
+
+[b]Troubleshooting[/b]
+Include your game version, configuration and BepInEx/LogOutput.log when reporting a problem.
