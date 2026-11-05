@@ -14,7 +14,7 @@ using UnityEngine.InputSystem;
 namespace KingdomBetterZoom
 {
     [BepInPlugin(Id, "Better Zoom", Version)]
-    [BepInDependency("urakka.kingdominc.foundation", "0.4.1")]
+    [BepInDependency("urakka.kingdominc.foundation", "0.5.0")]
     public sealed partial class BetterZoomPlugin : BaseUnityPlugin
     {
         public const string Id = "urakka.kingdominc.betterzoom";

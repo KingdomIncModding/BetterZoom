@@ -20,7 +20,7 @@ Open **Tech Tree → Mods** and research **Better Zoom** for **100 gold**. This 
 
 ## Requirements and installation
 
-Requires Kingdom Inc. for Windows x64 (Mono), BepInEx 5 x64, and Foundation 0.4.1 or later.
+Requires Kingdom Inc. for Windows x64 (Mono), BepInEx 5 x64, and Foundation 0.5.0 or later.
 
 1. Install BepInEx and Foundation separately.
 2. Close Kingdom Inc.

@@ -14,6 +14,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $zipPath = Join-Path $release "KingdomInc-BetterZoom-$version.zip"
 if (Test-Path -LiteralPath $zipPath) { throw "Release already exists: $zipPath" }
 $entries = [ordered]@{
+    'Better Zoom requirements.txt' = (Join-Path $project 'Nexus\REQUIREMENTS.txt')
     'BepInEx/plugins/BetterZoom/BetterZoom.dll' = $dll
     'Better Zoom README.txt' = (Join-Path $project 'README.md')
 }
