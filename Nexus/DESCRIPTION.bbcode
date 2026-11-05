@@ -1,46 +1,47 @@
-[b]Better Zoom - 1.0.1[/b]
-Zoom further out and further in with the normal mouse wheel, in both the workshop and research tree.
+[b]Better Zoom - 1.1.0[/b]
+Zoom further out and in with the normal mouse wheel, in the workshop and research tree.
+
+[b]Unlock Better Zoom[/b]
+Open [b]Tech Tree → Mods[/b] and research [b]Better Zoom[/b] for [b]100 gold[/b]. This unlocks the extra zoom range in the workshop and both research tabs. Until then, normal zoom limits apply. Existing kingdoms also need to purchase this research.
 
 [b]Features[/b]
 [list]
-[*]Three extra steps in each direction by default: eight times the visible width and height at the far limit, and eight times the usual maximum magnification at the close limit.
-[*]Zoom stays centered under the mouse cursor.
-[*]Research-tree background fills the viewport at far zoom, with bounded tile count and normal grid scale restored when zooming in.
-[*]Configurable extra zoom-in and zoom-out levels, independently adjustable from 0 to 5.
-[*]Preserves normal keyboard panning, UI scroll blocking and Shift+wheel workshop switching.
-[*]No new save fields or buildings; removable without save migration.
+[*]Three extra zoom-out steps show up to eight times the normal visible width and height.[/*]
+[*]Three extra zoom-in steps provide up to eight times the normal maximum magnification.[/*]
+[*]Zoom stays centered under your cursor.[/*]
+[*]The research-tree background fills the screen at far zoom and while panning.[/*]
+[*]Configure extra steps independently in each direction, from 0 to 5.[/*]
+[*]Keyboard panning and Shift+wheel workshop switching retain their usual controls.[/*]
 [/list]
 
 [b]Requirements[/b]
-Kingdom Inc. Tested on Release v1.0.12 / Unity 6000.3.27f2.
-BepInEx 5 for Windows x64 / Mono, tested with 5.4.23.6. Harmony is included with BepInEx.
-No other mods required. BepInEx is not bundled.
+Kingdom Inc. for Windows x64 (Mono).
+BepInEx 5 for Windows x64.
+Foundation 0.4.1 or later, installed separately.
 
 [b]Installation[/b]
-1. Install BepInEx 5 x64 if needed.
+1. Install BepInEx and Foundation separately.
 2. Close Kingdom Inc.
-3. Extract the ZIP into the directory containing KingdomInc.exe.
+3. Extract the ZIP into the folder containing KingdomInc.exe.
 4. Confirm BepInEx/plugins/BetterZoom/BetterZoom.dll exists.
-5. Restart and scroll past the old zoom limits in the workshop or research tree.
+5. Launch the game, open Tech Tree → Mods, and research Better Zoom.
 
 [b]Configuration[/b]
-After first launch, close the game and edit BepInEx/config/urakka.kingdominc.betterzoom.cfg.
+After the first launch, close the game and edit BepInEx/config/urakka.kingdominc.betterzoom.cfg:
 ExtraZoomOutLevels = 3
 ExtraZoomInLevels = 3
-Each additional step doubles or halves magnification. Allowed values: 0 through 5. Zero restores the normal limit in that direction. Restart after changes.
+Each extra step doubles or halves magnification. Choose 0 through 5 independently for each direction, then restart. Zero retains the normal limit in that direction. Research is required before extra steps take effect.
 
 [b]Updating and removal[/b]
-Close the game before replacing the DLL. To remove, delete BepInEx/plugins/BetterZoom and optionally its configuration file.
-Extended views are temporary camera state; reopening a view or restarting can restore the nearest normal zoom level. Saves remain usable after removal.
+Close the game before replacing the DLL. To remove Better Zoom, delete BepInEx/plugins/BetterZoom and optionally its configuration file. Saved kingdoms remain usable.
+The research unlock is saved with your kingdom. Extended views are temporary; reopening a view or restarting may restore a normal zoom level.
 
-[b]Compatibility and known issues[/b]
-169 isolated and 169 companion runtime checks passed on the release DLL; manual archive extraction is verified. Mod-manager deployment and other game builds are untested. Other camera zoom replacements may conflict. Far zoom makes text small and can increase rendering load. Keyboard movement uses the speed for the nearest normal zoom level.
+At far zoom, text and buildings become small. The background grid becomes coarser to fill the view. Keyboard panning uses the speed of the nearest normal zoom level.
 
-[b]Changes in 1.0.1[/b]
-Fix the research-tree backdrop ending in a small rectangle at far zoom. Preserve coverage while panning and on ultrawide displays; no save changes.
+[b]Changes in 1.1.0[/b]
+Add Better Zoom research under Tech Tree → Mods for 100 gold, unlocking the extra zoom range.
 
-[b]Credits and permissions[/b]
-Created by urakkaamyx. Uses BepInEx and Harmony. No game assemblies or artwork are distributed. No source-code license has been selected.
-
-[b]Troubleshooting[/b]
-Include your game version, configuration and BepInEx/LogOutput.log when reporting a problem.
+[b]Source and support[/b]
+[url=https://github.com/urakkaamyx/KingdomInc_BetterZoom]Source code, documentation and support[/url].
+Created for rockyamyx / urakkaamyx with AI-generated code, page text and promotional artwork.
+For support, include your game version, configuration and BepInEx/LogOutput.log.

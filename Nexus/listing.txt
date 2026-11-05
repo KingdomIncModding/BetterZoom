@@ -1,10 +1,10 @@
 Title: Better Zoom
-Version: 1.0.1
-Summary: Zoom further out and in in the workshop and research tree, with configurable limits and normal mouse wheel controls.
+Version: 1.1.0
+Summary: Research Better Zoom for 100 gold under Tech Tree → Mods to unlock extended workshop and research-tree zoom with configurable mouse wheel limits.
 Description: DESCRIPTION.bbcode
-Category: Select the appropriate gameplay or interface category on the actual game listing.
-Suggested tags: User Interface; Quality of Life. Confirm available tags before applying.
-Requirements: BepInEx 5 x64 (Mono), tested 5.4.23.6; Kingdom Inc. Release v1.0.12.
-Changelog: Initial release with three additional zoom steps in each direction, configurable limits and cursor anchoring.
+Category: Miscellaneous.
+Tags: User Interface; Quality of Life; AI-Generated Content; AI Media.
+Requirements: Kingdom Inc. Windows x64 (Mono); BepInEx 5 x64; Foundation 0.4.1 or later.
+Changelog: Add native Better Zoom research under Tech Tree → Mods for 100 gold. Normal zoom limits apply until purchased; the unlock saves with the kingdom.
 Publication: Authorized GitHub release and Nexus page 14; see PUBLICATION.json for verified final state.
 Media: Template thumbnail and research-tree far-zoom screenshot uploaded.

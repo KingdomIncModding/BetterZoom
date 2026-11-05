@@ -2,20 +2,26 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Assets.Behaviour.Flow;
+using Assets.Source.Player;
 using Assets.Behaviour.UI.Shared;
 using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
+using KingdomFoundation.Api;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace KingdomBetterZoom
 {
     [BepInPlugin(Id, "Better Zoom", Version)]
+    [BepInDependency("urakka.kingdominc.foundation", "0.4.1")]
     public sealed partial class BetterZoomPlugin : BaseUnityPlugin
     {
         public const string Id = "urakka.kingdominc.betterzoom";
-        public const string Version = "1.0.1";
+        public const string Version = "1.1.0";
+        public const string ResearchId = Id + ".unlock";
+        ITechNode research;
+        internal static bool Unlocked => GamePlayer.Current != null && GamePlayer.Current.HasTech(ResearchId);
         static readonly ConditionalWeakTable<WorldFlowCamera, ZoomState> States = new ConditionalWeakTable<WorldFlowCamera, ZoomState>();
         static readonly AccessTools.FieldRef<WorldFlowCamera, Camera> CameraField = AccessTools.FieldRefAccess<WorldFlowCamera, Camera>("_camera");
         static readonly AccessTools.FieldRef<WorldFlowCamera, SpriteRenderer> BackgroundField = AccessTools.FieldRefAccess<WorldFlowCamera, SpriteRenderer>("_background");
@@ -32,6 +38,9 @@ namespace KingdomBetterZoom
 
         void Awake()
         {
+            research = FoundationApi.CreateTechNode(new TechNodeDefinition(ResearchId, "Better Zoom", new Vector2(800, 0),
+                "Zoom further out and in in the workshop and research tree. Unlocks three additional steps in each direction by default.",
+                research: new TechNodeOptions(nodeType: TechNodeType.Utility, fixedCost: new CurrencyCollection(Currency.Gold, 100))));
             extraOut = Config.Bind("Zoom", "ExtraZoomOutLevels", 3, new ConfigDescription("Extra wheel steps beyond the normal farthest view. Each step shows twice the width and height.", new AcceptableValueRange<int>(0, 5)));
             extraIn = Config.Bind("Zoom", "ExtraZoomInLevels", 3, new ConfigDescription("Extra wheel steps beyond the normal closest view. Each step doubles magnification.", new AcceptableValueRange<int>(0, 5)));
             harmony = new Harmony(Id);
@@ -59,6 +68,7 @@ namespace KingdomBetterZoom
                     if (background && state.HasBackground) background.transform.localScale = state.BackgroundScale;
                 }
             harmony?.UnpatchSelf();
+            research?.Dispose();
         }
 
         internal static int Level(WorldFlowCamera camera) => States.TryGetValue(camera, out var state) ? state.Level : camera.ZoomLevel;
@@ -66,6 +76,7 @@ namespace KingdomBetterZoom
 
         static void Apply(WorldFlowCamera camera, int level)
         {
+            level = Mathf.Clamp(level, Unlocked ? -extraOut.Value : 0, camera.MaxZoom + (Unlocked ? extraIn.Value : 0));
             // Native levels stay in 0..4 for backgrounds, keyboard movement and saves.
             // The extended level belongs only to this live camera and is never serialized.
             camera.SetZoomLevel(Mathf.Clamp(level, 0, camera.MaxZoom));
@@ -109,8 +120,10 @@ namespace KingdomBetterZoom
             static bool Prefix(WorldFlowCamera __instance, int diff)
             {
                 if (diff == 0) return false;
-                int current = Level(__instance);
-                int next = Mathf.Clamp(current + Math.Sign(diff), -extraOut.Value, __instance.MaxZoom + extraIn.Value);
+                int minimum = Unlocked ? -extraOut.Value : 0;
+                int maximum = __instance.MaxZoom + (Unlocked ? extraIn.Value : 0);
+                int current = Mathf.Clamp(Level(__instance), minimum, maximum);
+                int next = Mathf.Clamp(current + Math.Sign(diff), minimum, maximum);
                 if (next == current) return false;
                 var camera = CameraField(__instance);
                 // Use this camera directly; this also works for the research tree camera.

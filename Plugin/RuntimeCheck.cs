@@ -60,8 +60,7 @@ namespace KingdomBetterZoom
                 InputSystem.Update();
                 workshop = WorldFlowCamera.Instance;
                 Check(workshop && WorldFlowManager.Visible, "Workshop camera loaded");
-                VerifyCamera(workshop, "workshop");
-                VerifyWheel(workshop, mouse);
+                VerifyLocked(workshop, "workshop");
                 GameUI.Instance.ToggleTechMenu(true);
             }
             catch (Exception ex) { error = ex.ToString(); }
@@ -69,6 +68,9 @@ namespace KingdomBetterZoom
             if (error == null) try
             {
                 Check(WorldFlowCamera.Instance != workshop, "Research tree uses separate camera");
+                VerifyLocked(WorldFlowCamera.Instance, "research tree");
+                VerifyResearchUnlock();
+                VerifyFoundationTabMemory();
                 VerifyCamera(WorldFlowCamera.Instance, "research tree");
                 VerifyWheel(WorldFlowCamera.Instance, mouse);
                 VerifyBackgroundExtremes(WorldFlowCamera.Instance);
@@ -90,7 +92,7 @@ namespace KingdomBetterZoom
             yield return new WaitForEndOfFrame();
             if (error == null) try
             {
-                CaptureCamera(CameraField(WorldFlowCamera.Instance), Path.Combine(directory, "research-tree-far-1.0.1.png"));
+                CaptureCamera(CameraField(WorldFlowCamera.Instance), Path.Combine(directory, "research-tree-far-" + Version + ".png"));
                 GameUI.Instance.ToggleTechMenu(false);
             }
             catch (Exception ex) { error = ex.ToString(); }
@@ -98,6 +100,8 @@ namespace KingdomBetterZoom
             if (error == null) try
             {
                 Check(WorldFlowCamera.Instance == workshop, "Workshop returns after closing research tree");
+                VerifyCamera(workshop, "workshop");
+                VerifyWheel(workshop, mouse);
                 Apply(workshop, -extraOut.Value);
                 var camera = CameraField(workshop);
                 camera.transform.position = new Vector3(0, 0, camera.transform.position.z);

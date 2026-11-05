@@ -15,9 +15,13 @@ New-Item -ItemType Directory -Path (Join-Path $bep 'plugins\BetterZoom'),(Join-P
 New-Item -ItemType Junction -Path (Join-Path $bep 'core') -Value (Join-Path $gameRoot 'BepInEx\core') | Out-Null
 Copy-Item -LiteralPath (Join-Path $gameRoot 'BepInEx\config\BepInEx.cfg') -Destination (Join-Path $bep 'config\BepInEx.cfg')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'bin\Release\netstandard2.1\BetterZoom.dll') -Destination (Join-Path $bep 'plugins\BetterZoom\BetterZoom.dll')
+$foundation = Join-Path $gameRoot 'BepInEx\plugins\Foundation\Foundation.dll'
+if (!(Test-Path -LiteralPath $foundation) -or [Reflection.AssemblyName]::GetAssemblyName($foundation).Version -lt [Version]'0.4.1') { throw 'Install Foundation 0.4.1 or later.' }
+New-Item -ItemType Directory -Path (Join-Path $bep 'plugins\Foundation') -Force | Out-Null
+Copy-Item -LiteralPath $foundation -Destination (Join-Path $bep 'plugins\Foundation\Foundation.dll')
 if ($WithExistingPlugins) {
     foreach ($plugin in Get-ChildItem -LiteralPath (Join-Path $gameRoot 'BepInEx\plugins') -Directory) {
-        if ($plugin.Name -eq 'BetterZoom') { continue }
+        if ($plugin.Name -in @('BetterZoom','Foundation')) { continue }
         Copy-Item -LiteralPath $plugin.FullName -Destination (Join-Path $bep 'plugins') -Recurse
     }
     # The normal game may already own port 17840. This private runtime uses 17849.
