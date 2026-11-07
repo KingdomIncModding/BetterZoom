@@ -2,7 +2,7 @@
 
 Zoom further out and in with the normal mouse wheel, in the workshop and research tree.
 
-Version: 1.1.0. Author: urakkaamyx.
+Version: 1.2.0. Author: urakkaamyx.
 
 ![Better Zoom](Assets/Thumbnails/better-zoom-thumbnail-v1.png)
 
@@ -24,7 +24,7 @@ Requires Kingdom Inc. for Windows x64 (Mono), BepInEx 5 x64, and Foundation 0.5.
 
 1. Install BepInEx and Foundation separately.
 2. Close Kingdom Inc.
-3. Extract `KingdomInc-BetterZoom-1.1.0.zip` into the folder containing `KingdomInc.exe`.
+3. Extract `KingdomInc-BetterZoom-1.2.0.zip` into the folder containing `KingdomInc.exe`.
 4. Confirm `BepInEx/plugins/BetterZoom/BetterZoom.dll` exists, then launch the game.
 5. Open **Tech Tree → Mods** and research **Better Zoom**.
 
@@ -49,6 +49,8 @@ The research unlock is saved with your kingdom. Extended camera views are tempor
 At far zoom, text and buildings become small. The background grid becomes coarser to fill the view. Keyboard panning uses the speed of the nearest normal zoom level.
 
 ## Changelog
+
+1.2.0: Added fine-tuned zoom step sizing and Foundation ModConfig menu integration.
 
 1.1.0: Add Better Zoom research under Tech Tree → Mods for 100 gold, unlocking the extra zoom range.
 

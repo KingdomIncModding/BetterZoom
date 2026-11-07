@@ -2,10 +2,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <AssemblyName>BetterZoom</AssemblyName>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <GameRoot>$(MSBuildThisFileDirectory)..\..\</GameRoot>
+    <GameRoot Condition="'$(GameRoot)' == ''">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\'))\</GameRoot>
+    <AssemblySearchPaths>{HintPathFromItem};{RawFileName}</AssemblySearchPaths>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Plugin\*.cs" />

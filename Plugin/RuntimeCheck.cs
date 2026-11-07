@@ -18,6 +18,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
+using KingdomFoundation.Api;
 
 namespace KingdomBetterZoom
 {
@@ -74,9 +75,9 @@ namespace KingdomBetterZoom
                 VerifyCamera(WorldFlowCamera.Instance, "research tree");
                 VerifyWheel(WorldFlowCamera.Instance, mouse);
                 VerifyBackgroundExtremes(WorldFlowCamera.Instance);
-                Check(GamePlayer.Current.FlowZoom >= 0 && GamePlayer.Current.FlowZoom <= 4 && GamePlayer.Current.TechTreeZoom >= 0 && GamePlayer.Current.TechTreeZoom <= 4, "Both stored camera levels remain vanilla compatible");
+                Check(GamePlayer.Current.Flows[0].Zoom >= 0 && GamePlayer.Current.Flows[0].Zoom <= 4 && GamePlayer.Current.TechTreeZoom >= 0 && GamePlayer.Current.TechTreeZoom <= 4, "Both stored camera levels remain vanilla compatible");
                 var json = GamePlayer.Current.ToJson();
-                Check(json["FlowZoom"].AsInteger >= 0 && json["TechTreeZoom"].AsInteger >= 0, "Native save JSON contains safe nonnegative zoom levels");
+                Check(json["Flows"][0]["Zoom"].AsInteger >= 0 && json["TechTreeZoom"].AsInteger >= 0, "Native save JSON contains safe nonnegative zoom levels");
                 var view = WorldFlowCamera.Instance;
                 Apply(view, -3);
                 var nodes = TechTreeMenu.Instance.Nodes.ToArray();
@@ -121,7 +122,7 @@ namespace KingdomBetterZoom
                 if (background && state.HasBackground) background.transform.localScale = state.BackgroundScale;
                 foreach (var method in new[] { AccessTools.Method(typeof(WorldFlowCamera), "ChangeZoomLevel"), AccessTools.Method(typeof(WorldFlowCamera), "SetZoomLevel"), AccessTools.PropertyGetter(typeof(WorldFlowCamera), "ZoomScale"), AccessTools.Method(typeof(WorldFlowCamera), "Update") })
                     harmony.Unpatch(method, HarmonyPatchType.All, Id);
-                workshop.SetZoomLevel(GamePlayer.Current.FlowZoom);
+                workshop.SetZoomLevel(GamePlayer.Current.Flows[0].Zoom);
                 Near(camera.orthographicSize, Screen.height / WorldFlowCamera.GetZoomScale(workshop.ZoomLevel), "Removing Better Zoom restores vanilla camera without invalid background indexing");
                 if (background && state.HasBackground) Check(background.transform.localScale == state.BackgroundScale, "Removal restores native background scale");
             }
@@ -257,6 +258,25 @@ namespace KingdomBetterZoom
             InputSystem.QueueDeltaStateEvent(mouse.scroll, new Vector2(0, 120)); InputSystem.Update();
             Check(Level(view) == 0, "Native wheel input returns from added level");
             InputSystem.QueueDeltaStateEvent(mouse.scroll, Vector2.zero); InputSystem.Update();
+
+            // Verify Fine-Tuned Zooming via zoomStep and ModConfig
+            Check(FoundationApi.ModConfig.TryGetSection(Id, out var sec), "Better Zoom is registered in Foundation ModConfig");
+            Check(sec.Elements.OfType<IModConfigSlider>().Any(e => e.Label == "Zoom Step Size"), "Better Zoom exposes Zoom Step Size in ModConfig");
+            float oldStep = zoomStep.Value;
+            try
+            {
+                zoomStep.Value = 0.25f;
+                view.SetZoomLevel(2);
+                view.ChangeZoomLevel(1);
+                Near(FloatLevel(view), 2.25f, "Zoom step 0.25 provides fine-tuned zoom level increment");
+                view.ChangeZoomLevel(-1);
+                Near(FloatLevel(view), 2.0f, "Zoom step 0.25 provides fine-tuned zoom level decrement");
+            }
+            finally
+            {
+                zoomStep.Value = oldStep;
+                view.SetZoomLevel(0);
+            }
         }
 
         static string HashFile(string path)

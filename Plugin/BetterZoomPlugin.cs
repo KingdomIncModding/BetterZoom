@@ -18,7 +18,7 @@ namespace KingdomBetterZoom
     public sealed partial class BetterZoomPlugin : BaseUnityPlugin
     {
         public const string Id = "urakka.kingdominc.betterzoom";
-        public const string Version = "1.1.0";
+        public const string Version = "1.2.0";
         public const string ResearchId = Id + ".unlock";
         ITechNode research;
         internal static bool Unlocked => GamePlayer.Current != null && GamePlayer.Current.HasTech(ResearchId);
@@ -27,10 +27,12 @@ namespace KingdomBetterZoom
         static readonly AccessTools.FieldRef<WorldFlowCamera, SpriteRenderer> BackgroundField = AccessTools.FieldRefAccess<WorldFlowCamera, SpriteRenderer>("_background");
         static readonly AccessTools.FieldRef<WorldFlowCamera, int> BackgroundPeriod = AccessTools.FieldRefAccess<WorldFlowCamera, int>("backgroundSize");
         static ConfigEntry<int> extraOut, extraIn;
+        static ConfigEntry<float> zoomStep;
         Harmony harmony;
         sealed class ZoomState
         {
             public int Level;
+            public float FloatLevel = 3f;
             public bool HasBackground;
             public Vector3 BackgroundScale;
         }
@@ -43,6 +45,13 @@ namespace KingdomBetterZoom
                 research: new TechNodeOptions(nodeType: TechNodeType.Utility, fixedCost: new CurrencyCollection(Currency.Gold, 100))));
             extraOut = Config.Bind("Zoom", "ExtraZoomOutLevels", 3, new ConfigDescription("Extra wheel steps beyond the normal farthest view. Each step shows twice the width and height.", new AcceptableValueRange<int>(0, 5)));
             extraIn = Config.Bind("Zoom", "ExtraZoomInLevels", 3, new ConfigDescription("Extra wheel steps beyond the normal closest view. Each step doubles magnification.", new AcceptableValueRange<int>(0, 5)));
+            zoomStep = Config.Bind("Zoom", "ZoomStep", 1.0f, new ConfigDescription("Zoom step increment per wheel tick. 1.0 is full vanilla level (2x scale change); lower values (e.g. 0.25) provide fine-tuned zooming.", new AcceptableValueRange<float>(0.05f, 1.0f)));
+
+            var section = FoundationApi.ModConfig.GetOrCreateSection(Id, "Better Zoom", "Zoom further out and in in the workshop and research tree, with fine-tuned zoom steps.");
+            section.AddSlider("Zoom Step Size", 0.05f, 1.0f, zoomStep.Value, val => { zoomStep.Value = val; Config.Save(); }, step: 0.05f, getter: () => zoomStep.Value, formatValue: v => Mathf.Approximately(v, 1.0f) ? "1.00 (Standard)" : $"{v:0.00} (Fine)");
+            section.AddSlider("Extra Zoom Out", 0, 5, extraOut.Value, val => { extraOut.Value = Mathf.RoundToInt(val); Config.Save(); }, step: 1f, getter: () => extraOut.Value, formatValue: v => $"{Mathf.RoundToInt(v)} levels");
+            section.AddSlider("Extra Zoom In", 0, 5, extraIn.Value, val => { extraIn.Value = Mathf.RoundToInt(val); Config.Save(); }, step: 1f, getter: () => extraIn.Value, formatValue: v => $"{Mathf.RoundToInt(v)} levels");
+
             harmony = new Harmony(Id);
             foreach (var type in new[] { typeof(ChangeZoom), typeof(ResetZoom), typeof(ActualScale), typeof(BackgroundCoverage) })
                 harmony.CreateClassProcessor(type).Patch();
@@ -71,16 +80,20 @@ namespace KingdomBetterZoom
             research?.Dispose();
         }
 
+        internal static float FloatLevel(WorldFlowCamera camera) => States.TryGetValue(camera, out var state) ? state.FloatLevel : camera.ZoomLevel;
         internal static int Level(WorldFlowCamera camera) => States.TryGetValue(camera, out var state) ? state.Level : camera.ZoomLevel;
-        internal static float Scale(int level) => Mathf.Pow(2f, level - 2);
+        internal static float Scale(float level) => Mathf.Pow(2f, level - 2);
 
-        static void Apply(WorldFlowCamera camera, int level)
+        static void Apply(WorldFlowCamera camera, float level)
         {
-            level = Mathf.Clamp(level, Unlocked ? -extraOut.Value : 0, camera.MaxZoom + (Unlocked ? extraIn.Value : 0));
-            // Native levels stay in 0..4 for backgrounds, keyboard movement and saves.
-            // The extended level belongs only to this live camera and is never serialized.
-            camera.SetZoomLevel(Mathf.Clamp(level, 0, camera.MaxZoom));
-            States.GetOrCreateValue(camera).Level = level;
+            float minimum = Unlocked ? -extraOut.Value : 0;
+            float maximum = camera.MaxZoom + (Unlocked ? extraIn.Value : 0);
+            level = Mathf.Clamp(level, minimum, maximum);
+            int intLevel = Mathf.Clamp(Mathf.RoundToInt(level), 0, camera.MaxZoom);
+            camera.SetZoomLevel(intLevel);
+            var state = States.GetOrCreateValue(camera);
+            state.Level = Mathf.RoundToInt(level);
+            state.FloatLevel = level;
             CameraField(camera).orthographicSize = Screen.height / Scale(level);
             CoverBackground(camera);
             FontFilteringSwitch.UpdateCameraZoom(camera);
@@ -120,11 +133,12 @@ namespace KingdomBetterZoom
             static bool Prefix(WorldFlowCamera __instance, int diff)
             {
                 if (diff == 0) return false;
-                int minimum = Unlocked ? -extraOut.Value : 0;
-                int maximum = __instance.MaxZoom + (Unlocked ? extraIn.Value : 0);
-                int current = Mathf.Clamp(Level(__instance), minimum, maximum);
-                int next = Mathf.Clamp(current + Math.Sign(diff), minimum, maximum);
-                if (next == current) return false;
+                float step = zoomStep != null ? Mathf.Clamp(zoomStep.Value, 0.05f, 1.0f) : 1.0f;
+                float minimum = Unlocked ? -extraOut.Value : 0;
+                float maximum = __instance.MaxZoom + (Unlocked ? extraIn.Value : 0);
+                float current = Mathf.Clamp(FloatLevel(__instance), minimum, maximum);
+                float next = Mathf.Clamp(current + Math.Sign(diff) * step, minimum, maximum);
+                if (Mathf.Approximately(next, current)) return false;
                 var camera = CameraField(__instance);
                 // Use this camera directly; this also works for the research tree camera.
                 Vector2 cursor = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -143,7 +157,9 @@ namespace KingdomBetterZoom
             static void Prefix(WorldFlowCamera __instance, ref int lv)
             {
                 lv = Mathf.Clamp(lv, 0, 4);
-                States.GetOrCreateValue(__instance).Level = lv;
+                var state = States.GetOrCreateValue(__instance);
+                state.Level = lv;
+                state.FloatLevel = lv;
             }
             static void Postfix(WorldFlowCamera __instance) => CoverBackground(__instance);
         }
@@ -157,7 +173,7 @@ namespace KingdomBetterZoom
         [HarmonyPatch(typeof(WorldFlowCamera), nameof(WorldFlowCamera.ZoomScale), MethodType.Getter)]
         static class ActualScale
         {
-            static void Postfix(WorldFlowCamera __instance, ref float __result) => __result = Scale(Level(__instance));
+            static void Postfix(WorldFlowCamera __instance, ref float __result) => __result = Scale(FloatLevel(__instance));
         }
     }
 }

@@ -10,6 +10,7 @@ if (!$report.passed -or $report.version -ne $version -or $report.dllSha256 -ne $
 if (!$compat.passed -or $compat.version -ne $version -or $compat.dllSha256 -ne $dllHash) { throw 'Build must match passing companion runtime checks.' }
 $release = Join-Path $project 'Releases'
 New-Item -ItemType Directory -Path $release -Force | Out-Null
+Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $zipPath = Join-Path $release "KingdomInc-BetterZoom-$version.zip"
 if (Test-Path -LiteralPath $zipPath) { throw "Release already exists: $zipPath" }
