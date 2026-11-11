@@ -1,65 +1,53 @@
 # Better Zoom
 
-Zoom further out and in with the normal mouse wheel, in the workshop and research tree.
+[GitHub releases](https://github.com/urakkaamyx/KingdomInc_BetterZoom/releases) · [Nexus Mods](https://www.nexusmods.com/kingdominc/mods/14) · Version 1.2.0
 
-Version: 1.2.0. Author: urakkaamyx.
+Extend workshop and research-tree zoom with configurable limits, cursor anchoring, and Foundation settings integration for Kingdom Inc.
 
-![Better Zoom](Assets/Thumbnails/better-zoom-thumbnail-v1.png)
+Zoom further out for panoramic factory overviews and closer in for precise pipe alignment using the standard mouse wheel.
 
-[GitHub releases](https://github.com/urakkaamyx/KingdomInc_BetterZoom/releases) · [Nexus Mods](https://www.nexusmods.com/kingdominc/mods/14)
+## Features
 
-## Unlock Better Zoom
+- **Extended Zoom-Out:** Add up to 5 extra zoom-out steps, displaying up to eight times the normal visible width and height.
+- **Extended Zoom-In:** Add up to 5 extra zoom-in steps for extreme close-up inspection.
+- **Cursor-Anchored Zooming:** Zooming naturally centers and tracks under your cursor position.
+- **Seamless Panoramic Backgrounds:** Research tree and workshop backgrounds dynamically expand to cover wide-angle viewing without blank margins.
+- **Foundation Settings Integration:** Configure zoom levels and step scaling directly in-game via the Foundation mod settings menu.
+- **Per-Kingdom Tech Unlock:** Research Better Zoom under Tech Tree > Mods for 100 gold to activate extended zoom levels for each kingdom.
 
-Open **Tech Tree → Mods** and research **Better Zoom** for **100 gold**. This unlocks extended zoom in the workshop and both research tabs. Until then, normal zoom limits apply. Existing kingdoms also need to purchase this research.
+## Usage and Controls
 
-- Three extra steps outward show up to eight times the normal visible width and height.
-- Three extra steps inward provide up to eight times the normal maximum magnification.
-- Zoom stays centered under your cursor.
-- The research-tree background fills the screen at far zoom and while panning.
-- Keyboard panning and Shift+wheel workshop switching retain their usual controls.
+1. Open **Tech Tree > Mods** and research **Better Zoom** (100 gold) to unlock extended zoom.
+2. Use the standard **Mouse Scroll Wheel** in the workshop and research views to zoom beyond vanilla limits.
+3. Configure your preferred extra zoom steps (0–5 in each direction) under **Options > Mods > Better Zoom** or in `BepInEx/config/urakka.kingdominc.betterzoom.cfg`.
 
-## Requirements and installation
+## Requirements
 
-Requires Kingdom Inc. for Windows x64 (Mono), BepInEx 5 x64, and Foundation 0.5.0 or later.
+- Kingdom Inc (Windows x64 Mono)
+- [BepInEx 5](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.6) (5.4.23.6 or newer)
+- [Foundation](https://www.nexusmods.com/kingdominc/mods/18) (0.11.0 or newer)
 
-1. Install BepInEx and Foundation separately.
-2. Close Kingdom Inc.
-3. Extract `KingdomInc-BetterZoom-1.2.0.zip` into the folder containing `KingdomInc.exe`.
-4. Confirm `BepInEx/plugins/BetterZoom/BetterZoom.dll` exists, then launch the game.
-5. Open **Tech Tree → Mods** and research **Better Zoom**.
+## Installation
 
-## Configuration
+1. Install BepInEx 5 for Kingdom Inc.
+2. Install Foundation (0.11.0 or newer).
+3. Extract the release ZIP into your Kingdom Inc game directory.
+4. Verify the file exists at `BepInEx/plugins/BetterZoom/BetterZoom.dll`.
+5. Launch the game, open Tech Tree > Mods, and research Better Zoom!
 
-After the first launch, close the game and edit `BepInEx/config/urakka.kingdominc.betterzoom.cfg`:
+## Compatibility
 
-```ini
-[Zoom]
-ExtraZoomOutLevels = 3
-ExtraZoomInLevels = 3
-```
+| Class.Method | Hook Type | Impact |
+|---|---|---|
+| WorldFlowCamera.Update | Harmony Postfix | Dynamically adjusts camera view bounds, grid sizing, and background extents for extended zoom levels. |
+| WorldFlowCamera.ChangeZoomLevel | Harmony Prefix | Replaces the native zoom clamping logic to allow configured extra zoom-in and zoom-out steps while preserving cursor anchoring. |
+| WorldFlowCamera.SetZoomLevel | Harmony Prefix | Applies configured extended zoom level bounds and orthographic camera size scaling. |
+| WorldFlowCamera.ZoomScale (getter) | Harmony Postfix | Returns the accurate scale factor calculated across the extended zoom level range. |
 
-Each extra step doubles or halves magnification. Choose 0 through 5 independently for each direction, then restart. Zero retains the normal limit in that direction. Research is still required before extra steps take effect.
+## Removal
 
-## Updating and removal
+Close the game and delete `BepInEx/plugins/BetterZoom/`. Saved kingdoms remain fully compatible.
 
-Close the game before replacing the DLL. To remove Better Zoom, delete `BepInEx/plugins/BetterZoom`; its configuration file can also be deleted. Saved kingdoms remain usable.
+## Credits and Source
 
-The research unlock is saved with your kingdom. Extended camera views are temporary; reopening a view or restarting may restore a normal zoom level.
-
-At far zoom, text and buildings become small. The background grid becomes coarser to fill the view. Keyboard panning uses the speed of the nearest normal zoom level.
-
-## Changelog
-
-1.2.0: Added fine-tuned zoom step sizing and Foundation ModConfig menu integration.
-
-1.1.0: Add Better Zoom research under Tech Tree → Mods for 100 gold, unlocking the extra zoom range.
-
-1.0.1: Fix the research-tree background ending inside the view at far zoom.
-
-1.0.0: Initial release.
-
-## Credits and support
-
-Created for rockyamyx / urakkaamyx with AI-generated code, page text and promotional artwork.
-
-For support, include your game version, Better Zoom version, configuration and `BepInEx/LogOutput.log` in a [GitHub issue](https://github.com/urakkaamyx/KingdomInc_BetterZoom/issues).
+Created by **Urakka** (rockyamyx). [Source code on GitHub](https://github.com/urakkaamyx/KingdomInc_BetterZoom). Game artwork belongs to its respective owners.

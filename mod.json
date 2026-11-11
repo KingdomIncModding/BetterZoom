@@ -1,0 +1,69 @@
+{
+  "id": "BetterZoom",
+  "name": "Better Zoom",
+  "version": "1.2.0",
+  "author": "Urakka",
+  "description": "Extend workshop and research-tree zoom with configurable limits, cursor anchoring, and Foundation settings.",
+  "repository": {
+    "platform": "GitHub",
+    "owner": "urakkaamyx",
+    "name": "KingdomInc_BetterZoom",
+    "url": "https://github.com/urakkaamyx/KingdomInc_BetterZoom",
+    "branch": "main",
+    "visibility": "public",
+    "topics": [
+      "kingdom-inc",
+      "kingdom-inc-mod",
+      "bepinex",
+      "harmony",
+      "camera",
+      "zoom",
+      "quality-of-life",
+      "user-interface"
+    ],
+    "latestTag": "v1.2.0"
+  },
+  "distribution": {
+    "nexus": {
+      "game": "kingdominc",
+      "modId": 14,
+      "fileId": 8307231,
+      "url": "https://www.nexusmods.com/kingdominc/mods/14",
+      "requirements": [
+        {
+          "name": "Foundation",
+          "url": "https://www.nexusmods.com/kingdominc/mods/18",
+          "minimumVersion": "0.11.0",
+          "type": "nexus"
+        },
+        {
+          "name": "BepInEx 5",
+          "url": "https://github.com/BepInEx/BepInEx/releases",
+          "minimumVersion": "5.x",
+          "type": "offsite"
+        }
+      ],
+      "tags": [
+        "AI Media",
+        "AI-Generated Content",
+        "Quality of Life",
+        "User Interface"
+      ],
+      "tagsVerified": true,
+      "requirementsVerified": true
+    }
+  },
+  "development": {
+    "framework": "Foundation",
+    "language": "C#",
+    "target": "netstandard2.1",
+    "dependencies": [
+      "BepInEx 5",
+      "Foundation >= 0.11.0"
+    ]
+  },
+  "publishing": {
+    "githubReleases": "https://github.com/urakkaamyx/KingdomInc_BetterZoom/releases/tag/v1.2.0",
+    "nexusMods": "https://www.nexusmods.com/kingdominc/mods/14"
+  }
+}
