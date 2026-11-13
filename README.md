@@ -2,7 +2,7 @@
 
 **Current release: 1.2.1 — for Kingdom Inc game version 1.0.14.**
 
-[GitHub releases](https://github.com/urakkaamyx/KingdomInc_BetterZoom/releases) · [Nexus Mods](https://www.nexusmods.com/kingdominc/mods/14) · Version 1.2.1
+[GitHub releases](https://github.com/KingdomIncModding/KingdomInc_BetterZoom/releases) · [Nexus Mods](https://www.nexusmods.com/kingdominc/mods/14) · Version 1.2.1
 
 Extend workshop and research-tree zoom with configurable limits, cursor anchoring, and Foundation settings integration for Kingdom Inc.
 
@@ -52,4 +52,4 @@ Close the game and delete `BepInEx/plugins/BetterZoom/`. Saved kingdoms remain f
 
 ## Credits and Source
 
-Created by **Urakka** (rockyamyx). [Source code on GitHub](https://github.com/urakkaamyx/KingdomInc_BetterZoom). Game artwork belongs to its respective owners.
+Created by **Urakka** (rockyamyx). [Source code on GitHub](https://github.com/KingdomIncModding/KingdomInc_BetterZoom). Game artwork belongs to its respective owners.

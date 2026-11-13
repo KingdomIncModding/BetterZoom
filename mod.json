@@ -6,9 +6,9 @@
   "description": "For Kingdom Inc game version 1.0.14. Extend workshop and research-tree zoom with configurable limits, cursor anchoring, and Foundation settings.",
   "repository": {
     "platform": "GitHub",
-    "owner": "urakkaamyx",
+    "owner": "KingdomIncModding",
     "name": "KingdomInc_BetterZoom",
-    "url": "https://github.com/urakkaamyx/KingdomInc_BetterZoom",
+    "url": "https://github.com/KingdomIncModding/KingdomInc_BetterZoom",
     "branch": "main",
     "visibility": "public",
     "topics": [
@@ -65,7 +65,7 @@
     "gameIntegration": "Foundation"
   },
   "publishing": {
-    "githubReleases": "https://github.com/urakkaamyx/KingdomInc_BetterZoom/releases/tag/v1.2.0",
+    "githubReleases": "https://github.com/KingdomIncModding/KingdomInc_BetterZoom/releases/tag/v1.2.0",
     "nexusMods": "https://www.nexusmods.com/kingdominc/mods/14",
     "archivePreviousReleases": false
   }
