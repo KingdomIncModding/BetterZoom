@@ -1,16 +1,17 @@
-using Assets.Behaviour.Flow;
-using HarmonyLib;
+using KingdomFoundation.Api;
 using UnityEngine;
 
 namespace KingdomBetterZoom
 {
-    [HarmonyPatch(typeof(WorldFlowCamera), nameof(WorldFlowCamera.SetZoomLevel))]
-    internal static partial class SetZoomPatch
+    internal static class SetZoomPatch
     {
-        private static void Prefix(WorldFlowCamera __instance, ref int lv)
+        internal static void Before(GameHookCall call)
         {
-            lv = Mathf.Clamp(lv, 0, 4);
-            BetterZoomPlugin.States.GetOrCreateValue(__instance).FloatLevel = lv;
+            int level = Mathf.Clamp(call.Argument<int>(0), 0, 4);
+            call.SetArgument(0, level);
+            ZoomController.States.GetOrCreateValue(call.View).FloatLevel = level;
         }
+
+        internal static void After(GameHookCall call) => ZoomController.CoverBackground(call.View);
     }
 }

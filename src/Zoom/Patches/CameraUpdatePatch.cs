@@ -1,11 +1,8 @@
-using Assets.Behaviour.Flow;
-using HarmonyLib;
-
+using KingdomFoundation.Api;
 namespace KingdomBetterZoom
 {
-    [HarmonyPatch(typeof(WorldFlowCamera), "Update")]
     internal static class CameraUpdatePatch
     {
-        private static void Postfix(WorldFlowCamera __instance) => BetterZoomPlugin.CoverBackground(__instance);
+        internal static void After(GameHookCall call) => ZoomController.CoverBackground(call.View);
     }
 }
