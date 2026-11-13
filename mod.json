@@ -7,8 +7,8 @@
   "repository": {
     "platform": "GitHub",
     "owner": "KingdomIncModding",
-    "name": "KingdomInc_BetterZoom",
-    "url": "https://github.com/KingdomIncModding/KingdomInc_BetterZoom",
+    "name": "BetterZoom",
+    "url": "https://github.com/KingdomIncModding/BetterZoom",
     "branch": "main",
     "visibility": "public",
     "topics": [
@@ -65,7 +65,7 @@
     "gameIntegration": "Foundation"
   },
   "publishing": {
-    "githubReleases": "https://github.com/KingdomIncModding/KingdomInc_BetterZoom/releases/tag/v1.2.0",
+    "githubReleases": "https://github.com/KingdomIncModding/BetterZoom/releases/tag/v1.2.0",
     "nexusMods": "https://www.nexusmods.com/kingdominc/mods/14",
     "archivePreviousReleases": false
   }
