@@ -17,3 +17,6 @@
 /AI_SETUP_PROMPT.md
 .env
 .env.*
+# Local build outputs (never commit)
+/Release/
+/Debug/

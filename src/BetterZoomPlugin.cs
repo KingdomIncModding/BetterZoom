@@ -7,7 +7,7 @@ namespace KingdomBetterZoom
     public sealed class BetterZoomPlugin : BaseUnityPlugin
     {
         public const string Id = "urakka.kingdominc.betterzoom";
-        public const string Version = "1.2.1";
+        public const string Version = "1.2.2";
         public const string ResearchId = Id + ".unlock";
         private BetterZoomLifecycle lifecycle;
         private void Awake()

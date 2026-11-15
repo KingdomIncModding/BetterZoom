@@ -7,5 +7,6 @@ namespace KingdomBetterZoom
         public float FloatLevel = 3f;
         public bool HasBackground;
         public Vector3 BackgroundScale;
+        public int SuspensionDepth;
     }
 }

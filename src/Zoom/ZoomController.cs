@@ -48,6 +48,19 @@ namespace KingdomBetterZoom
             background.transform.localScale = new Vector3(state.BackgroundScale.x * factor, state.BackgroundScale.y * factor, state.BackgroundScale.z);
         }
 
+        internal static bool IsSuspended(Component view)
+            => view != null && States.TryGetValue(view, out var state) && state.SuspensionDepth > 0;
+
+        internal static void ClampAllActiveViews()
+        {
+            foreach (var view in FoundationApi.CameraAccess.Views)
+            {
+                if (!view || IsSuspended(view))
+                    continue;
+                ApplyZoom(view, FloatingLevel(view));
+            }
+        }
+
         internal static float FloatingLevel(Component view) => States.TryGetValue(view, out var state) ? state.FloatLevel : FoundationApi.CameraAccess.ZoomLevel(view);
         internal static float ZoomScale(float level) => Mathf.Pow(2f, level - 2f);
     }

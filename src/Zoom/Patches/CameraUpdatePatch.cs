@@ -3,6 +3,11 @@ namespace KingdomBetterZoom
 {
     internal static class CameraUpdatePatch
     {
-        internal static void After(GameHookCall call) => ZoomController.CoverBackground(call.View);
+        internal static void After(GameHookCall call)
+        {
+            if (ZoomController.IsSuspended(call.View))
+                return;
+            ZoomController.CoverBackground(call.View);
+        }
     }
 }

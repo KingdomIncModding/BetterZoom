@@ -1,8 +1,8 @@
 # Better Zoom
 
-**Current release: 1.2.1 — for Kingdom Inc game version 1.0.14.**
+**Current release: 1.2.2 — for Kingdom Inc game version 1.0.14.**
 
-[GitHub releases](https://github.com/KingdomIncModding/BetterZoom/releases) · [Nexus Mods](https://www.nexusmods.com/kingdominc/mods/14) · Version 1.2.1
+[GitHub releases](https://github.com/KingdomIncModding/BetterZoom/releases) · [Nexus Mods](https://www.nexusmods.com/kingdominc/mods/14) · Version 1.2.2
 
 Extend workshop and research-tree zoom with configurable limits, cursor anchoring, and Foundation settings integration for Kingdom Inc.
 
@@ -10,8 +10,8 @@ Zoom further out for panoramic factory overviews and closer in for precise pipe 
 
 ## Features
 
-- **Extended Zoom-Out:** Add up to 5 extra zoom-out steps, displaying up to eight times the normal visible width and height.
-- **Extended Zoom-In:** Add up to 5 extra zoom-in steps for extreme close-up inspection.
+- **Extended Zoom-Out:** Add up to 5 extra zoom-out steps (3 by default for 8x normal visible width and height; up to 32x at 5 steps).
+- **Extended Zoom-In:** Add up to 5 extra zoom-in steps (3 by default for 8x closer zoom; up to 32x magnification at 5 steps).
 - **Cursor-Anchored Zooming:** Zooming naturally centers and tracks under your cursor position.
 - **Seamless Panoramic Backgrounds:** Research tree and workshop backgrounds dynamically expand to cover wide-angle viewing without blank margins.
 - **Foundation Settings Integration:** Configure zoom levels and step scaling directly in-game via the Foundation mod settings menu.
@@ -41,10 +41,10 @@ Zoom further out for panoramic factory overviews and closer in for precise pipe 
 
 | Class.Method | Hook Type | Impact |
 |---|---|---|
-| WorldFlowCamera.Update | Foundation hook (postfix) | Dynamically adjusts camera view bounds, grid sizing, and background extents for extended zoom levels. |
-| WorldFlowCamera.ChangeZoomLevel | Foundation hook (prefix) | Replaces the native zoom clamping logic to allow configured extra zoom-in and zoom-out steps while preserving cursor anchoring. |
-| WorldFlowCamera.SetZoomLevel | Foundation hook (prefix) | Applies configured extended zoom level bounds and orthographic camera size scaling. |
-| WorldFlowCamera.ZoomScale (getter) | Foundation hook (postfix) | Returns the accurate scale factor calculated across the extended zoom level range. |
+| WorldFlowCamera.Update | Foundation hook (postfix) | Dynamically scales the tiled backdrop sprite to cover the expanded camera viewport. |
+| WorldFlowCamera.ChangeZoomLevel | Foundation hook (prefix) | Replaces native zoom stepping with configurable zoom increments, extended bounds, and cursor-anchored camera positioning. |
+| WorldFlowCamera.SetZoomLevel | Foundation hook (prefix and postfix) | Clamps native saved integer levels to 0–4, updates tracked floating zoom levels, and refreshes tiled backdrop coverage. |
+| WorldFlowCamera.ZoomScale (getter) | Foundation hook (postfix) | Computes the camera zoom scale factor from the tracked floating zoom level across the extended range. |
 
 ## Removal
 

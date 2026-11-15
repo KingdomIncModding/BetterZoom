@@ -10,6 +10,11 @@ namespace KingdomBetterZoom
         internal static void Before(GameHookCall call)
         {
             var view = call.View;
+            if (ZoomController.IsSuspended(view))
+            {
+                call.Cancel();
+                return;
+            }
             int diff = call.Argument<int>(0);
             call.Cancel();
             if (diff == 0)
