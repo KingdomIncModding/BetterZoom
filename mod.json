@@ -1,73 +1,73 @@
 {
-  "id": "BetterZoom",
-  "name": "Better Zoom",
-  "version": "1.2.2",
-  "author": "Urakka",
-  "description": "For Kingdom Inc game version 1.0.14. Extend workshop and research-tree zoom with configurable limits, cursor anchoring, and Foundation settings.",
-  "repository": {
-    "platform": "GitHub",
-    "owner": "KingdomIncModding",
-    "name": "BetterZoom",
-    "url": "https://github.com/KingdomIncModding/BetterZoom",
-    "branch": "main",
-    "visibility": "public",
-    "topics": [
-      "kingdom-inc",
-      "kingdom-inc-mod",
-      "bepinex",
-      "harmony",
-      "camera",
-      "zoom",
-      "quality-of-life",
-      "user-interface"
-    ],
-    "latestTag": "v1.2.1"
-  },
-  "distribution": {
-    "nexus": {
-      "game": "kingdominc",
-      "modId": 14,
-      "fileId": 8307231,
-      "url": "https://www.nexusmods.com/kingdominc/mods/14",
-      "requirements": [
-        {
-          "name": "Foundation",
-          "url": "https://www.nexusmods.com/kingdominc/mods/18",
-          "minimumVersion": "0.14.0",
-          "type": "nexus",
-          "fileId": 8358756
-        },
-        {
-          "name": "BepInEx 5",
-          "url": "https://github.com/BepInEx/BepInEx/releases",
-          "minimumVersion": "5.x",
-          "type": "offsite"
-        }
-      ],
-      "tags": [
-        "AI Media",
-        "AI-Generated Content",
-        "Quality of Life",
-        "User Interface"
-      ],
-      "tagsVerified": true,
-      "requirementsVerified": true,
-      "runtimeVersionId": "46785078755451"
-    }
-  },
-  "development": {
-    "framework": "Foundation",
-    "language": "C#",
-    "target": "netstandard2.1",
-    "dependencies": [
-      "BepInEx 5",
-      "Foundation 0.14.0"
-    ],
-    "gameIntegration": "Foundation"
-  },
-  "publishing": {
-    "githubReleases": "https://github.com/KingdomIncModding/BetterZoom/releases/tag/v1.2.1",
-    "nexusMods": "https://www.nexusmods.com/kingdominc/mods/14",
-    "archivePreviousReleases": false
-  }
+    "id":  "BetterZoom",
+    "name":  "Better Zoom",
+    "version":  "1.2.2",
+    "author":  "Urakka",
+    "description":  "For Kingdom Inc game version 1.0.14. Extend workshop and research-tree zoom with configurable limits, cursor anchoring, and Foundation settings.",
+    "repository":  {
+                       "platform":  "GitHub",
+                       "owner":  "KingdomIncModding",
+                       "name":  "BetterZoom",
+                       "url":  "https://github.com/KingdomIncModding/BetterZoom",
+                       "branch":  "main",
+                       "visibility":  "public",
+                       "topics":  [
+                                      "kingdom-inc",
+                                      "kingdom-inc-mod",
+                                      "bepinex",
+                                      "harmony",
+                                      "camera",
+                                      "zoom",
+                                      "quality-of-life",
+                                      "user-interface"
+                                  ],
+                       "latestTag":  "v1.2.2"
+                   },
+    "distribution":  {
+                         "nexus":  {
+                                       "game":  "kingdominc",
+                                       "modId":  14,
+                                       "fileId":  8307231,
+                                       "url":  "https://www.nexusmods.com/kingdominc/mods/14",
+                                       "requirements":  [
+                                                            {
+                                                                "name":  "Foundation",
+                                                                "url":  "https://www.nexusmods.com/kingdominc/mods/18",
+                                                                "minimumVersion":  "0.14.0",
+                                                                "type":  "nexus",
+                                                                "fileId":  8358756
+                                                            },
+                                                            {
+                                                                "name":  "BepInEx 5",
+                                                                "url":  "https://github.com/BepInEx/BepInEx/releases",
+                                                                "minimumVersion":  "5.x",
+                                                                "type":  "offsite"
+                                                            }
+                                                        ],
+                                       "tags":  [
+                                                    "AI Media",
+                                                    "AI-Generated Content",
+                                                    "Quality of Life",
+                                                    "User Interface"
+                                                ],
+                                       "tagsVerified":  true,
+                                       "requirementsVerified":  true,
+                                       "runtimeVersionId":  "46785078755451"
+                                   }
+                     },
+    "development":  {
+                        "framework":  "Foundation",
+                        "language":  "C#",
+                        "target":  "netstandard2.1",
+                        "dependencies":  [
+                                             "BepInEx 5",
+                                             "Foundation 0.14.0"
+                                         ],
+                        "gameIntegration":  "Foundation"
+                    },
+    "publishing":  {
+                       "githubReleases":  "https://github.com/KingdomIncModding/BetterZoom/releases/tag/v1.2.2",
+                       "nexusMods":  "https://www.nexusmods.com/kingdominc/mods/14",
+                       "archivePreviousReleases":  false
+                   }
 }
